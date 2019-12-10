@@ -14,6 +14,9 @@ inputs:
   teamName:
     description: Name of the team whose members will populate the table
     required: true
+  token:
+    description: Token to use to get list of team members
+    required: true
 outputs:
   outputPath:
     description: Path on disk where the table data was stored in JSON format
