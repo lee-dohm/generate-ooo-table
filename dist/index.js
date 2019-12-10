@@ -77,6 +77,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(__webpack_require__(622));
 const core = __importStar(__webpack_require__(470));
 const moment = __webpack_require__(482);
+function generateDates(startDate, dateFormat) {
+    return [0, 1, 2, 3, 4, 5, 6].map(days => moment(startDate).add(days, 'days')).map(date => date.format(dateFormat));
+}
+exports.generateDates = generateDates;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

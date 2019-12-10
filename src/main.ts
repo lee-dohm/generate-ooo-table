@@ -4,6 +4,12 @@ import * as core from '@actions/core'
 
 const moment = require('moment')
 
+export function generateDates(startDate: string, dateFormat: string): string[] {
+  return [0, 1, 2, 3, 4, 5, 6]
+    .map(days => moment(startDate).add(days, 'days'))
+    .map(date => date.format(dateFormat))
+}
+
 async function run(): Promise<void> {
   try {
     const dateFormat = core.getInput('dateFormat') || 'ddd MM.DD'
