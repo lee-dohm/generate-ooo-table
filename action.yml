@@ -10,7 +10,7 @@ inputs:
     default: '$GITHUB_WORKSPACE/ooo-table.json'
   startDate:
     description: Date of the first column in the weekly table in YYYY-MM-DD format
-    required: true
+    default: 'today'
   teamName:
     description: Name of the team whose members will populate the table
     required: true
