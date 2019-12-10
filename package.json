@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "generate-ooo-table",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "A GitHub Action to generate the data for an out-of-office table of team members in a weekly status issue",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -22,7 +22,7 @@
     "node",
     "setup"
   ],
-  "author": "YourNameOrOrganization",
+  "author": "lee-dohm",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.0"

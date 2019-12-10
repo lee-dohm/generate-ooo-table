@@ -1,10 +1,22 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: generate-ooo-table
+description: Generates the data for an out-of-office table of team members in a weekly status issue
+author: lee-dohm
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  dateFormat:
+    description: Moment.js format string to use to format the date columns
+    default: 'ddd MM.DD'
+  outputPath:
+    description: Path on disk where the table data is stored in JSON format
+    default: '$GITHUB_WORKSPACE/ooo-table.json'
+  startDate:
+    description: Date of the first column in the weekly table in YYYY-MM-DD format
+    required: true
+  teamName:
+    description: Name of the team whose members will populate the table
+    required: true
+outputs:
+  outputPath:
+    description: Path on disk where the table data was stored in JSON format
 runs:
   using: 'node12'
   main: 'dist/index.js'
