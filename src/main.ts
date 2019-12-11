@@ -1,8 +1,27 @@
+import * as fs from 'fs'
 import * as path from 'path'
+import * as util from 'util'
 
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 
 const moment = require('moment')
+const writeFile = util.promisify(fs.writeFile)
+
+interface Team {
+  org: string
+  team_slug: string
+}
+
+function buildTable(dates: string[], teamMembers: string[]): string[][] {
+  const table: string[][] = [['', ...dates]]
+
+  for (const member of teamMembers) {
+    table.push([`@${member}`, '', '', '', '', '', '', ''])
+  }
+
+  return table
+}
 
 export function generateDates(startDate: string, dateFormat: string): string[] {
   return [0, 1, 2, 3, 4, 5, 6]
@@ -10,7 +29,25 @@ export function generateDates(startDate: string, dateFormat: string): string[] {
     .map(date => date.format(dateFormat))
 }
 
-async function run(): Promise<void> {
+export async function getTeamMembers(token: string, teamName: string): Promise<string[]> {
+  const octokit = new github.GitHub(token)
+  const { data: teamData } = await octokit.teams.getByName(splitTeamName(teamName))
+  const { data: data } = await octokit.teams.listMembers({ team_id: teamData.id })
+
+  return data.map(member => member.login).sort((a, b) => (a < b ? -1 : 1))
+}
+
+function splitTeamName(teamName: string): Team {
+  const matches = teamName.match(/@?([^/]+)\/(.+)/)
+
+  if (!matches) {
+    throw new Error(`Improperly formatted team name: ${teamName}`)
+  }
+
+  return { org: matches[1], team_slug: matches[2] }
+}
+
+export async function run(): Promise<void> {
   try {
     const dateFormat = core.getInput('dateFormat') || 'ddd MM.DD'
     core.debug(`Date format: ${dateFormat}`)
@@ -36,6 +73,12 @@ async function run(): Promise<void> {
     if (!token) {
       throw new Error('Token is a required input')
     }
+
+    const dates = generateDates(startDate, dateFormat)
+    const members = await getTeamMembers(token, teamName)
+    const table = buildTable(dates, members)
+
+    await writeFile(outputPath, JSON.stringify({ data: table }))
 
     core.setOutput('outputPath', outputPath)
   } catch (error) {
