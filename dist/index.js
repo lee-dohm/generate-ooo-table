@@ -3209,7 +3209,7 @@ function getTeamMembers(token, teamName) {
         const octokit = new github.GitHub(token);
         const { data: teamData } = yield octokit.teams.getByName(splitTeamName(teamName));
         const { data: data } = yield octokit.teams.listMembers({ team_id: teamData.id });
-        return data.map(member => member.login).sort((a, b) => a < b ? -1 : 1);
+        return data.map(member => member.login).sort((a, b) => (a < b ? -1 : 1));
     });
 }
 exports.getTeamMembers = getTeamMembers;
